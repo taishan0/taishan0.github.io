@@ -13,7 +13,7 @@
 
 
 
-<title>20260227 | Hexo</title>
+<title>BUUCTFre  findit | Hexo</title>
 
 
 
@@ -203,7 +203,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">20260227</h1>
+            <h1 class="post-title">BUUCTFre  findit</h1>
             
                 <div class="post-meta">
                     
@@ -228,8 +228,23 @@
         </header>
 
         <div class="post-content">
-            <h2 id="逆向学习"><a href="#逆向学习" class="headerlink" title="逆向学习"></a>逆向学习</h2><p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260227120756675.jpeg" alt="第一张测试图片"></p>
-<p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260227121052634.jpg" alt="jie2"></p>
+            <h2 id="逆向学习"><a href="#逆向学习" class="headerlink" title="逆向学习"></a>逆向学习</h2><h2 id="BUUCTF-findit"><a href="#BUUCTF-findit" class="headerlink" title="BUUCTF    findit"></a>BUUCTF    findit</h2><p><em>不知不觉，小明长大了，变成了一个程序员，虽然很苦逼，但是偶尔编写个小东西坑害公司新人还是蛮好玩的。新人小萌一天问小明wifi账号密码，一分钟后，小萌收到了一个文件。小萌想了好久都没得到密码，怎么办，女朋友要买东西，流量告罄，没wifi上不了网，不买就分手，是时候该展现月老的实力了兄弟们！代表月亮惩罚小明！得出答案。 注意：得到的 flag 请包上 flag{} 提交</em></p>
+<p>打开发现是个压缩包，直接解压后发现是个APK文件</p>
+<p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260227135245941.png" alt="image-20260227135245879"></p>
+<p>可反编译查看源码，使用工具JADX、AndroidKiller、Android studio等工具，我这里使用的是JADX</p>
+<p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260227135842998.png" alt="image-20260227135842865"></p>
+<p>打开后直接找到<strong>main函数</strong>的代码页，分析一下整个代码页（我这里截的不全）</p>
+<ol>
+<li>定义了两个字符数组a和b；</li>
+<li>先对数组a做字符偏移处理生成验证字符串m；</li>
+<li>若输入框内容等于m，则对数组b做字符偏移解密，显示最终 flag；</li>
+<li>输入错误则提示 “答案错了…”。</li>
+</ol>
+<p><em>java大佬应该能直接看出来，我这里是扔给AI分析的</em></p>
+<p><strong>接下来的重点就转化成了简单的数字偏移</strong><br>看到数组b&#x3D;pvkq{m164675262033l4m49lnp7p9mnk28k75}</p>
+<p> <strong>注意：得到的 flag 请包上 flag{} 提交</strong>，由提示可以知道最后答案是flag{}形式<br>p~f偏移量是16（就是26个英文字母的顺序，从p到下一个f）</p>
+<p><a target="_blank" rel="noopener" href="https://www.toolhelper.cn/SymmetricEncryption/CaesarCipher"></a></p>
+<p>直接用锤子工具在线解密，即可得到flag<br><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260227141730113.png" alt="image-20260227141730023"></p>
 
         </div>
 

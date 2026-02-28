@@ -233,18 +233,18 @@
 <p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260228161842686.png" alt="image-20260228161842594"></p>
 <p>解压后发现一个是txt纯文本文件，一个是html文件，由于大小是1kb，下意识的先看看有没有壳</p>
 <p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260228165250498.png" alt="image-20260228165250452"></p>
-<p>打开txt文件</p>
+<p>这时会发现该文件无壳，那就直接下一步<br>打开txt文件</p>
 <p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260228165557819.png" alt="image-20260228165557740"></p>
 <p>打开html文件后</p>
 <p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260228165640937.png" alt="image-20260228165640837"></p>
 <p>直接查看页面源代码</p>
 <p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260228165712282.png" alt="image-20260228165712201"></p>
 <p>分析后我们可以看到输入的 flag 会被做<strong>ROT13 加密</strong>（字母偏移 13 位）；</p>
-<p>加密后的结果需等于 <a href="mailto:&#80;&#x79;&#118;&#x72;&#97;&#x67;&#x46;&#x76;&#113;&#x72;&#x59;&#98;&#116;&#x76;&#x61;&#102;&#78;&#x65;&#114;&#x52;&#x6e;&#102;&#x6c;&#64;&#115;&#x79;&#x6e;&#x65;&#x72;&#45;&#98;&#x61;&#46;&#112;&#x62;&#122;">PyvragFvqrYbtvafNerRnfl@syner-ba.pbz</a></p>
+<p>加密后的结果需等于 <a href="mailto:&#x50;&#x79;&#x76;&#x72;&#97;&#103;&#x46;&#x76;&#113;&#114;&#89;&#x62;&#116;&#118;&#97;&#102;&#78;&#101;&#x72;&#x52;&#110;&#x66;&#x6c;&#64;&#115;&#121;&#x6e;&#101;&#x72;&#45;&#x62;&#97;&#x2e;&#x70;&#98;&#x7a;">PyvragFvqrYbtvafNerRnfl@syner-ba.pbz</a></p>
 <p>这时本题的关键就变成了<strong>对目标字符串做反向 ROT13 解密</strong></p>
 <p><a target="_blank" rel="noopener" href="https://lzltool.cn/Tools/Rot13">ROT13加密&#x2F;解密 - ROT13编码&#x2F;解码—LZL在线工具</a></p>
 <p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260228170016748.png" alt="image-20260228170016661"></p>
-<p>由于提示可知得到的flag用flag包裹起来<br>所以最后结果：flag{<a href="mailto:&#67;&#x6c;&#105;&#x65;&#x6e;&#116;&#83;&#105;&#x64;&#101;&#x4c;&#x6f;&#103;&#x69;&#x6e;&#x73;&#x41;&#x72;&#101;&#x45;&#97;&#115;&#121;&#64;&#x66;&#108;&#x61;&#114;&#x65;&#45;&#x6f;&#x6e;&#46;&#x63;&#111;&#109;">ClientSideLoginsAreEasy@flare-on.com</a>}</p>
+<p>由于提示可知得到的flag用flag包裹起来<br>所以最后结果：flag{<a href="mailto:&#67;&#x6c;&#105;&#x65;&#110;&#x74;&#83;&#105;&#100;&#101;&#x4c;&#111;&#103;&#105;&#110;&#115;&#65;&#114;&#x65;&#x45;&#97;&#x73;&#x79;&#x40;&#x66;&#x6c;&#97;&#x72;&#101;&#x2d;&#111;&#x6e;&#x2e;&#99;&#111;&#109;">ClientSideLoginsAreEasy@flare-on.com</a>}</p>
 
         </div>
 

@@ -13,7 +13,7 @@
 
 
 
-<title>BUUCTFre  findit | Taishan&#39;s blog</title>
+<title>BUUCTFre    [FlareOn4]login | Taishan&#39;s blog</title>
 
 
 
@@ -203,7 +203,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">BUUCTFre  findit</h1>
+            <h1 class="post-title">BUUCTFre    [FlareOn4]login</h1>
             
                 <div class="post-meta">
                     
@@ -212,7 +212,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">February 27, 2026&nbsp;&nbsp;12:07:21</a>
+                        Date: <a href="#">February 28, 2026&nbsp;&nbsp;17:03:21</a>
                         </span>
                     
                     
@@ -228,23 +228,23 @@
         </header>
 
         <div class="post-content">
-            <h2 id="逆向学习"><a href="#逆向学习" class="headerlink" title="逆向学习"></a>逆向学习</h2><h2 id="BUUCTF-findit"><a href="#BUUCTF-findit" class="headerlink" title="BUUCTF    findit"></a>BUUCTF    findit</h2><p><em>不知不觉，小明长大了，变成了一个程序员，虽然很苦逼，但是偶尔编写个小东西坑害公司新人还是蛮好玩的。新人小萌一天问小明wifi账号密码，一分钟后，小萌收到了一个文件。小萌想了好久都没得到密码，怎么办，女朋友要买东西，流量告罄，没wifi上不了网，不买就分手，是时候该展现月老的实力了兄弟们！代表月亮惩罚小明！得出答案。 注意：得到的 flag 请包上 flag{} 提交</em></p>
-<p>打开发现是个压缩包，直接解压后发现是个APK文件</p>
-<p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260227135245941.png" alt="image-20260227135245879"></p>
-<p>可反编译查看源码，使用工具JADX、AndroidKiller、Android studio等工具，我这里使用的是JADX</p>
-<p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260227135842998.png" alt="image-20260227135842865"></p>
-<p>打开后直接找到<strong>main函数</strong>的代码页，分析一下整个代码页（我这里截的不全）</p>
-<ol>
-<li>定义了两个字符数组a和b；</li>
-<li>先对数组a做字符偏移处理生成验证字符串m；</li>
-<li>若输入框内容等于m，则对数组b做字符偏移解密，显示最终 flag；</li>
-<li>输入错误则提示 “答案错了…”。</li>
-</ol>
-<p><em>java大佬应该能直接看出来，我这里是扔给AI分析的</em></p>
-<p><strong>接下来的重点就转化成了简单的数字偏移</strong><br>看到数组b&#x3D;pvkq{m164675262033l4m49lnp7p9mnk28k75}</p>
-<p> <strong>注意：得到的 flag 请包上 flag{} 提交</strong>，由提示可以知道最后答案是flag{}形式<br>p~f偏移量是16（就是26个英文字母的顺序，从p到下一个f）</p>
-<p><a target="_blank" rel="noopener" href="https://www.toolhelper.cn/SymmetricEncryption/CaesarCipher"></a></p>
-<p>直接用锤子工具在线解密，即可得到flag<br><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260227141730113.png" alt="image-20260227141730023"></p>
+            <h2 id="逆向学习"><a href="#逆向学习" class="headerlink" title="逆向学习"></a>逆向学习</h2><h3 id="BUUCTF-FlareOn4-login"><a href="#BUUCTF-FlareOn4-login" class="headerlink" title="BUUCTF     [FlareOn4]login"></a>BUUCTF     [FlareOn4]login</h3><p>得到的 flag 请包上 flag{} 提交。</p>
+<p>打开是个压缩包，直接解压</p>
+<p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260228161842686.png" alt="image-20260228161842594"></p>
+<p>解压后发现一个是txt纯文本文件，一个是html文件，由于大小是1kb，下意识的先看看有没有壳</p>
+<p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260228165250498.png" alt="image-20260228165250452"></p>
+<p>打开txt文件</p>
+<p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260228165557819.png" alt="image-20260228165557740"></p>
+<p>打开html文件后</p>
+<p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260228165640937.png" alt="image-20260228165640837"></p>
+<p>直接查看页面源代码</p>
+<p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260228165712282.png" alt="image-20260228165712201"></p>
+<p>分析后我们可以看到输入的 flag 会被做<strong>ROT13 加密</strong>（字母偏移 13 位）；</p>
+<p>加密后的结果需等于 <a href="mailto:&#80;&#x79;&#118;&#x72;&#97;&#x67;&#x46;&#x76;&#113;&#x72;&#x59;&#98;&#116;&#x76;&#x61;&#102;&#78;&#x65;&#114;&#x52;&#x6e;&#102;&#x6c;&#64;&#115;&#x79;&#x6e;&#x65;&#x72;&#45;&#98;&#x61;&#46;&#112;&#x62;&#122;">PyvragFvqrYbtvafNerRnfl@syner-ba.pbz</a></p>
+<p>这时本题的关键就变成了<strong>对目标字符串做反向 ROT13 解密</strong></p>
+<p><a target="_blank" rel="noopener" href="https://lzltool.cn/Tools/Rot13">ROT13加密&#x2F;解密 - ROT13编码&#x2F;解码—LZL在线工具</a></p>
+<p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260228170016748.png" alt="image-20260228170016661"></p>
+<p>由于提示可知得到的flag用flag包裹起来<br>所以最后结果：flag{<a href="mailto:&#67;&#x6c;&#105;&#x65;&#x6e;&#116;&#83;&#105;&#x64;&#101;&#x4c;&#x6f;&#103;&#x69;&#x6e;&#x73;&#x41;&#x72;&#101;&#x45;&#97;&#115;&#121;&#64;&#x66;&#108;&#x61;&#114;&#x65;&#45;&#x6f;&#x6e;&#46;&#x63;&#111;&#109;">ClientSideLoginsAreEasy@flare-on.com</a>}</p>
 
         </div>
 
@@ -259,7 +259,7 @@
                 
                     <p class="copyright-item">
                         <span>Permalink:</span>
-                        <span><a href="http://example.com/2026/02/27/20260227/">http://example.com/2026/02/27/20260227/</a></span>
+                        <span><a href="http://example.com/2026/02/28/%5BFlareOn4%5Dlogin/">http://example.com/2026/02/28/%5BFlareOn4%5Dlogin/</a></span>
                     </p>
                 
                 
@@ -296,10 +296,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2026/02/28/%5BFlareOn4%5Dlogin/">BUUCTFre    [FlareOn4]login</a>
             
-            
-            <a class="next" rel="next" href="/2026/02/26/study1/">blogTest</a>
+            <a class="next" rel="next" href="/2026/02/27/20260227/">BUUCTFre  findit</a>
             
         </section>
 

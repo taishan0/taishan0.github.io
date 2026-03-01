@@ -13,7 +13,7 @@
 
 
 
-<title>BUUCTFre  helloword | Taishan&#39;s blog</title>
+<title>BUUCTF  简单注册器 | Taishan&#39;s blog</title>
 
 
 
@@ -203,7 +203,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">BUUCTFre  helloword</h1>
+            <h1 class="post-title">BUUCTF  简单注册器</h1>
             
                 <div class="post-meta">
                     
@@ -212,7 +212,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">February 28, 2026&nbsp;&nbsp;20:18:00</a>
+                        Date: <a href="#">March 1, 2026&nbsp;&nbsp;16:27:00</a>
                         </span>
                     
                     
@@ -228,16 +228,34 @@
         </header>
 
         <div class="post-content">
-            <h2 id="逆向学习"><a href="#逆向学习" class="headerlink" title="逆向学习"></a>逆向学习</h2><h3 id="BUUCTF-helloword"><a href="#BUUCTF-helloword" class="headerlink" title="BUUCTF   helloword"></a>BUUCTF   helloword</h3><p>有难的题目，也就有简单的题目，就像程序员一辈子编写的第一个程序，极有可能是helloword，它很普通，但是也很让人怀念。你猜这题flag在哪里？让我们怀念第一次编写的easy程序吧！ 注意：得到的 flag 请包上 flag{} 提交</p>
-<p>直接下载打开后发现是个APK文件</p>
+            <h2 id="简单注册器"><a href="#简单注册器" class="headerlink" title="简单注册器"></a>简单注册器</h2><p>生活中难免会有需要使用一些付费的程序，但是没有绿色版怎么办？只能自己逆向看看注册程序的代码是什么逻辑了。 注意：得到的 flag 请包上 flag{} 提交</p>
+<p>直接下载解压后发现是个APK文件</p>
+<p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260301150509047.png" alt="image-20260301150508973"></p>
 <p>可反编译查看源码，使用工具JADX、AndroidKiller、Android studio等工具，我这里使用的是JADX</p>
-<p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260228201826538.png" alt="image-20260228201826434"></p>
-<p>使用JADX打开后直接找到main函数</p>
-<p>flag{7631a988259a00816deda84afb29430a}.compareTo(“xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx”);</p>
+<p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260301150543888.png" alt="image-20260301150543765"></p>
+<p>打开后依旧直接找到main函数的代码页（我这里没截完）</p>
+<p>分析这串代码我们可以知道</p>
+<p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260301153637403.png" alt="image-20260301153637310"></p>
+<p><strong>这里是最重要的</strong></p>
+<p>对固定字符数组 <code>x = &quot;dd2940c04462b4dd7c450528835cca15&quot;.toCharArray()</code> 执行 4 次逐位计算，关键是<strong>按 ASCII 码值运算</strong>（字符本质是 ASCII 数字）：</p>
 <ul>
-<li><code>compareTo</code>是 Java 字符串比较方法，这里只是 “伪校验”（没有实际的判断逻辑，只是代码里硬编码了 flag 字符串）；</li>
-<li>双引号里的<code>flag{7631a988259a00816deda84afb29430a}</code>就是题目要找的<strong>最终 flag</strong></li>
+<li>计算 1：<code>x[2] = (x[2] + x[3]) - 50</code> → 把索引 2 的字符换成运算后结果；</li>
+<li>计算 2：<code>x[4] = (x[2] + x[5]) - 48</code> → 基于计算 1 的结果更新索引 4；</li>
+<li>计算 3：<code>x[30] = (x[31] + x[9]) - 48</code> → 用索引 31、9 的值更新索引 30；</li>
+<li>计算 4：<code>x[14] = (x[27] + x[28]) - 97</code> → 用索引 27、28 的值更新索引 14；</li>
+<li>所有计算都是 “字符 ASCII 值相加后减固定数”，再转回字符。</li>
+<li>对计算后的数组执行<strong>对称反转</strong>（32 位数组，前 16 位和后 16 位交换）：<ul>
+<li>循环 <code>i从0到15</code>，交换 <code>x[i]</code> 和 <code>x[31-i]</code> → 本质是把整个数组倒序；</li>
+<li>反转后拼接成字符串，包裹flag{}后就是最终结果。</li>
 </ul>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">def get_flag():</span><br><span class="line">    x = list(&quot;dd2940c04462b4dd7c450528835cca15&quot;)</span><br><span class="line">    x[2] = chr((ord(x[2]) + ord(x[3])) - 50)</span><br><span class="line">    x[4] = chr((ord(x[2]) + ord(x[5])) - 48)</span><br><span class="line">    x[30] = chr((ord(x[31]) + ord(x[9])) - 48)</span><br><span class="line">    x[14] = chr((ord(x[27]) + ord(x[28])) - 97)</span><br><span class="line"></span><br><span class="line">    for i in range(16):</span><br><span class="line">        a = x[31 - i]</span><br><span class="line">        x[31 - i] = x[i]</span><br><span class="line">        x[i] = a</span><br><span class="line"></span><br><span class="line">    flag = &quot;flag&#123;&quot; + &#x27;&#x27;.join(x) + &quot;&#125;&quot;</span><br><span class="line">    print(&quot;flag：&quot;, flag)</span><br><span class="line"></span><br><span class="line">if __name__ == &quot;__main__&quot;:</span><br><span class="line">    get_flag()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>本人java是小白，所以这里用的python（虽然python也没学得多明白）</p>
+<p>运行代码后即可得到flag</p>
+<p><strong>flag{59acc538825054c7de4b26440c0999dd}</strong></p>
+<p>其实这题不用费脑子猜输入，就盯着程序里那串固定字符：先改 4 个位置的字符（按数字加减算），再把整串倒过来，套个<code>flag{}</code>就是最后的答案。</p>
 
         </div>
 
@@ -252,7 +270,7 @@
                 
                     <p class="copyright-item">
                         <span>Permalink:</span>
-                        <span><a href="http://example.com/2026/02/28/helloword/">http://example.com/2026/02/28/helloword/</a></span>
+                        <span><a href="http://example.com/2026/03/01/%E7%AE%80%E5%8D%95%E6%B3%A8%E5%86%8C%E5%99%A8/">http://example.com/2026/03/01/%E7%AE%80%E5%8D%95%E6%B3%A8%E5%86%8C%E5%99%A8/</a></span>
                     </p>
                 
                 
@@ -289,10 +307,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2026/03/01/%E7%AE%80%E5%8D%95%E6%B3%A8%E5%86%8C%E5%99%A8/">BUUCTF  简单注册器</a>
             
-            
-            <a class="next" rel="next" href="/2026/02/28/%5BFlareOn4%5Dlogin/">BUUCTFre    [FlareOn4]login</a>
+            <a class="next" rel="next" href="/2026/02/28/helloword/">BUUCTFre  helloword</a>
             
         </section>
 

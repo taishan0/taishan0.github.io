@@ -13,7 +13,7 @@
 
 
 
-<title>BUUCTF  简单注册器 | Taishan&#39;s blog</title>
+<title>BUUCTFre  rsa | Taishan&#39;s blog</title>
 
 
 
@@ -203,7 +203,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">BUUCTF  简单注册器</h1>
+            <h1 class="post-title">BUUCTFre  rsa</h1>
             
                 <div class="post-meta">
                     
@@ -212,7 +212,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">March 1, 2026&nbsp;&nbsp;16:27:00</a>
+                        Date: <a href="#">March 2, 2026&nbsp;&nbsp;16:27:00</a>
                         </span>
                     
                     
@@ -228,34 +228,22 @@
         </header>
 
         <div class="post-content">
-            <h2 id="简单注册器"><a href="#简单注册器" class="headerlink" title="简单注册器"></a>简单注册器</h2><p>生活中难免会有需要使用一些付费的程序，但是没有绿色版怎么办？只能自己逆向看看注册程序的代码是什么逻辑了。 注意：得到的 flag 请包上 flag{} 提交</p>
-<p>直接下载解压后发现是个APK文件</p>
-<p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260301150509047.png" alt="image-20260301150508973"></p>
-<p>可反编译查看源码，使用工具JADX、AndroidKiller、Android studio等工具，我这里使用的是JADX</p>
-<p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260301150543888.png" alt="image-20260301150543765"></p>
-<p>打开后依旧直接找到main函数的代码页（我这里没截完）</p>
-<p>分析这串代码我们可以知道</p>
-<p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260301153637403.png" alt="image-20260301153637310"></p>
-<p><strong>这里是最重要的</strong></p>
-<p>对固定字符数组 <code>x = &quot;dd2940c04462b4dd7c450528835cca15&quot;.toCharArray()</code> 执行 4 次逐位计算，关键是<strong>按 ASCII 码值运算</strong>（字符本质是 ASCII 数字）：</p>
-<ul>
-<li>计算 1：<code>x[2] = (x[2] + x[3]) - 50</code> → 把索引 2 的字符换成运算后结果；</li>
-<li>计算 2：<code>x[4] = (x[2] + x[5]) - 48</code> → 基于计算 1 的结果更新索引 4；</li>
-<li>计算 3：<code>x[30] = (x[31] + x[9]) - 48</code> → 用索引 31、9 的值更新索引 30；</li>
-<li>计算 4：<code>x[14] = (x[27] + x[28]) - 97</code> → 用索引 27、28 的值更新索引 14；</li>
-<li>所有计算都是 “字符 ASCII 值相加后减固定数”，再转回字符。</li>
-<li>对计算后的数组执行<strong>对称反转</strong>（32 位数组，前 16 位和后 16 位交换）：<ul>
-<li>循环 <code>i从0到15</code>，交换 <code>x[i]</code> 和 <code>x[31-i]</code> → 本质是把整个数组倒序；</li>
-<li>反转后拼接成字符串，包裹flag{}后就是最终结果。</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">def get_flag():</span><br><span class="line">    x = list(&quot;dd2940c04462b4dd7c450528835cca15&quot;)</span><br><span class="line">    x[2] = chr((ord(x[2]) + ord(x[3])) - 50)</span><br><span class="line">    x[4] = chr((ord(x[2]) + ord(x[5])) - 48)</span><br><span class="line">    x[30] = chr((ord(x[31]) + ord(x[9])) - 48)</span><br><span class="line">    x[14] = chr((ord(x[27]) + ord(x[28])) - 97)</span><br><span class="line"></span><br><span class="line">    for i in range(16):</span><br><span class="line">        a = x[31 - i]</span><br><span class="line">        x[31 - i] = x[i]</span><br><span class="line">        x[i] = a</span><br><span class="line"></span><br><span class="line">    flag = &quot;flag&#123;&quot; + &#x27;&#x27;.join(x) + &quot;&#125;&quot;</span><br><span class="line">    print(&quot;flag：&quot;, flag)</span><br><span class="line"></span><br><span class="line">if __name__ == &quot;__main__&quot;:</span><br><span class="line">    get_flag()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+            <h2 id="rsa"><a href="#rsa" class="headerlink" title="rsa"></a>rsa</h2><p>ras是一个非常神秘的算法，那么它神秘在哪里 请少侠自己摸索！ 注意：得到的 flag 请包上 flag{} 提交</p>
+<p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260302154656014.png" alt="image-20260302154655947"></p>
+<p>直接解压后得到两个文件</p>
+<p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260302154718771.png" alt="image-20260302154718649"></p>
+<p>用记事本直接打开pub.key<br>把pub.key的内容放进公钥解析中解析一下<br><a target="_blank" rel="noopener" href="https://www.ssleye.com/ssltool/pub_asysi.html">SSL在线工具-在线公钥解析-在线公钥提取-公钥在线破解-SSLeye官网</a></p>
+<p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260302154854578.png" alt="image-20260302154854480"></p>
+<p>这时候得到了e&#x3D;65537，n&#x3D;8693448229604811919066606200349480058890565601720302561721665405<br>8378322103517<br>得到n的之后再用factordb分解质因数<br><a target="_blank" rel="noopener" href="http://www.factordb.com/index.php?query=+8693448229604811919066606200349480058890565601720302561721665405+8378322103517">factordb.com</a></p>
+<p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260302155112289.png" alt="image-20260302155112198"></p>
+<p>这时候便得到了p和q的值，这时候就差d的值了，你可以通过脚本，但我更喜欢工具（doge）<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/MikeCoke/article/details/105920084">RSA求解明文，安利函数pow()_rsa中pow函数-CSDN博客</a>（这里感谢<strong>CTFer菜菜</strong>给的教程）</p>
+<p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260302155343008.png" alt="image-20260302155342935"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">e = 65537</span><br><span class="line">n = 86934482296048119190666062003494800588905656017203025617216654058378322103517</span><br><span class="line">p = 285960468890451637935629440372639283459</span><br><span class="line">q = 304008741604601924494328155975272418463</span><br><span class="line">d = 81176168860169991027846870170527607562179635470395365333547868786951080991441</span><br></pre></td></tr></table></figure>
 
-<p>本人java是小白，所以这里用的python（虽然python也没学得多明白）</p>
-<p>运行代码后即可得到flag</p>
-<p><strong>flag{59acc538825054c7de4b26440c0999dd}</strong></p>
-<p>其实这题不用费脑子猜输入，就盯着程序里那串固定字符：先改 4 个位置的字符（按数字加减算），再把整串倒过来，套个<code>flag{}</code>就是最后的答案。</p>
+<p>这时候就可以编写脚本了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">import rsa</span><br><span class="line"></span><br><span class="line">e = 65537</span><br><span class="line">n = 86934482296048119190666062003494800588905656017203025617216654058378322103517</span><br><span class="line">p = 285960468890451637935629440372639283459</span><br><span class="line">q = 304008741604601924494328155975272418463</span><br><span class="line">d = 81176168860169991027846870170527607562179635470395365333547868786951080991441</span><br><span class="line"></span><br><span class="line">key = rsa.PrivateKey(n=n, e=e, d=d, p=p, q=q)</span><br><span class="line"></span><br><span class="line">file_path = r&quot;C:\Users\28693\Downloads\41c4e672-98c5-43e5-adf4-49d75db307e4\output\flag.enc&quot;</span><br><span class="line"></span><br><span class="line">try:</span><br><span class="line">    with open(file_path, &quot;rb&quot;) as f:</span><br><span class="line">        ciphertext = f.read()</span><br><span class="line">        plaintext = rsa.decrypt(ciphertext, key)</span><br><span class="line">        print(&quot;flag：&quot;, plaintext.decode(&quot;utf-8&quot;))</span><br><span class="line">except Exception as e:</span><br><span class="line">    print(&quot;解密失败，原因：&quot;, e)</span><br><span class="line">    print(&quot;提示：密文可能不是rsa库加密的格式，需用原始模幂解密&quot;)</span><br></pre></td></tr></table></figure>
+
+<p>以为到这就完成了，运行代码发现报错，这其实是<code>rsa</code>模块未安装的问题，直接打开命令指示符，然后安装即可<br><strong>pip3 install rsa</strong><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260302160711350.png" alt="image-20260302160711270"><br>运行脚本即可得到最后的flag<br><strong>flag{decrypt_256}</strong></p>
 
         </div>
 
@@ -270,7 +258,7 @@
                 
                     <p class="copyright-item">
                         <span>Permalink:</span>
-                        <span><a href="http://example.com/2026/03/01/%E7%AE%80%E5%8D%95%E6%B3%A8%E5%86%8C%E5%99%A8/">http://example.com/2026/03/01/%E7%AE%80%E5%8D%95%E6%B3%A8%E5%86%8C%E5%99%A8/</a></span>
+                        <span><a href="http://example.com/2026/03/02/RSA/">http://example.com/2026/03/02/RSA/</a></span>
                     </p>
                 
                 
@@ -307,10 +295,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2026/03/02/RSA/">BUUCTFre  rsa</a>
             
-            
-            <a class="next" rel="next" href="/2026/02/28/helloword/">BUUCTFre  helloword</a>
+            <a class="next" rel="next" href="/2026/03/01/%E7%AE%80%E5%8D%95%E6%B3%A8%E5%86%8C%E5%99%A8/">BUUCTF  简单注册器</a>
             
         </section>
 

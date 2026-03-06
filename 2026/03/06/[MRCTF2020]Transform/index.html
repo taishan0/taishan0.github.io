@@ -251,7 +251,7 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">dword = [9,10,15,23,7,24,12,6,1,16,3,17,32,29,11,30,27,22,4,13,19,20,21,2,25,5,31,8,18,26,28,14,0]</span><br><span class="line">byte = [0x67,0x79,0x7B,0x7F,0x75,0x2B,0x3C,0x52,0x53,0x79,0x57,0x5E,0x5D,0x42,0x7B,0x2D,0x2A,0x66,0x42,0x7E,0x4C,0x57,0x79,0x41,0x6B,0x7E,0x65,0x3C,0x5C,0x45,0x6F,0x62,0x4D]</span><br><span class="line"></span><br><span class="line">v6 = [0]*33</span><br><span class="line">for i in range(33):</span><br><span class="line">    v6[dword[i]] = byte[i] ^ dword[i]</span><br><span class="line">flag = f&quot;flag&#123;&#123;&#123;&#x27;&#x27;.join(chr(c) for c in v6)&#125;&#125;&#125;&quot;</span><br><span class="line"></span><br><span class="line">print(&quot;最终答案：&quot;, flag)</span><br></pre></td></tr></table></figure>
 
 <p>运行代码即可得到结果，由于得到的 flag 请包上 flag{} 提交</p>
-<p>所以最后结果为<strong>flag{Tr4nsp0sltiON_Clph3r_1s_3z}}</strong></p>
+<p>所以最后结果为<strong>flag{Tr4nsp0sltiON_Clph3r_1s_3z}</strong></p>
 
         </div>
 

@@ -13,7 +13,7 @@
 
 
 
-<title>BUUCTF  CrackRTF | Taishan&#39;s blog</title>
+<title>BUUCTF  [MRCTF2020]Transform | Taishan&#39;s blog</title>
 
 
 
@@ -203,7 +203,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">BUUCTF  CrackRTF</h1>
+            <h1 class="post-title">BUUCTF  [MRCTF2020]Transform</h1>
             
                 <div class="post-meta">
                     
@@ -212,7 +212,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">March 5, 2026&nbsp;&nbsp;16:27:00</a>
+                        Date: <a href="#">March 6, 2026&nbsp;&nbsp;16:27:00</a>
                         </span>
                     
                     
@@ -228,32 +228,30 @@
         </header>
 
         <div class="post-content">
-            <h2 id="CrackRTF"><a href="#CrackRTF" class="headerlink" title="CrackRTF"></a>CrackRTF</h2><p>在互联网时代，兼容就是胜利，兼容就是王道。为了遏制微软一家独大的趋势，小明自诩民族斗士，向微软CEO挑战，CEO给了他一个文件，据说破解后能得到一个微软的多信息文本格式文件。只有得到了才能获得挑战CEO的机会。小明绞尽脑汁，最后不得不求助大家。。。兄弟们该出手时就出手！ 注意：得到的 flag 请包上 flag{} 提交</p>
-<p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260305110909509.png" alt="image-20260305110909414"></p>
-<p>直接下载发现是个应用程序，先用upx看一看有没有壳</p>
-<p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260305111035094.png" alt="image-20260305111035017"></p>
-<p>发现无壳后直接拖入IDA中分析，依旧找到main函数按f5查看代码<br><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260305111207160.png" alt="image-20260305111207012"></p>
-<p>分析代码可知（我这里没有截全）</p>
-<p>程序分两步验证密码：</p>
+            <h2 id="MRCTF2020-Transform"><a href="#MRCTF2020-Transform" class="headerlink" title="[MRCTF2020]Transform"></a>[MRCTF2020]Transform</h2><p>得到的 flag 请包上 flag{} 提交。<br>感谢天璇战队供题。<img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260306113805002.png" alt="image-20260306113804946"></p>
+<p>打开后发现是个exe的应用程序</p>
+<p>先查一下有没有壳（我这里用的是upx）</p>
+<p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260306114122740.png" alt="image-20260306114122685"></p>
+<p>发现无壳后再拖入IDA中，依旧找到main函数</p>
+<p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260306114526400.png" alt="image-20260306114526295"></p>
+<p>分析这串代码可知要解这道题，核心是<strong>逆向推导</strong>：</p>
 <ol>
-<li>第一道密码（6 位数字）→ 拼接<code>@DBApp</code> → 调用<code>sub_40100A</code>→ 结果需等于<code>6E32D0943418C2C33385BC35A1470250DD8923A9</code>；</li>
-<li>第二道密码（6 位字符）→ 拼接第一道密码 +<code>@DBApp</code>的完整字符串 → 调用<code>sub_401019</code>→ 结果需等于<code>27019e688a4e62a649fd99cadaafdb4e</code>，且<code>sub_40100F</code>验证通过。</li>
+<li><p>从程序里提取两个关键数组：</p>
+<p>dword_40F040 [0~32]（置换顺序数组）；</p>
+<p>byte_40F0E0 [0~32]（标准答案数组）；</p>
+</li>
+<li><p>逆向计算：对每个位置 i，先把 byte_40F0E0 [i] ^ dword_40F040 [i]（异或的逆运算还是异或），得到 “置换后的字符”；</p>
+</li>
+<li><p>还原置换：根据 dword_40F040 [i] 的顺序，把 “置换后的字符” 放回原位置，得到最终的 33 位输入字符串。</p>
+</li>
 </ol>
-<p>也就是说只需解出这两道密码分别是啥，就能得到最终的flag</p>
-<p>我这里是直接拿AI分析的：<strong>第一道密码是SHA1 哈希</strong><br>第一道密码因为前面已经提示只有数字，我们直接爆破即可</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">import hashlib</span><br><span class="line"></span><br><span class="line">target_sha1 = &quot;6E32D0943418C2C33385BC35A1470250DD8923A9&quot;.lower()</span><br><span class="line"></span><br><span class="line">for pass1 in range(100000, 1000000):</span><br><span class="line">    s = f&quot;&#123;pass1&#125;@DBApp&quot;</span><br><span class="line">    sha1_result = hashlib.sha1(s.encode()).hexdigest()</span><br><span class="line">    if sha1_result == target_sha1:</span><br><span class="line">        print(f&quot;第一道密码（pass1）：&#123;pass1&#125;&quot;)</span><br><span class="line">        break</span><br></pre></td></tr></table></figure>
+<p>所以只需要到<code>dword_40F040</code>和<code>byte_40F0E0</code>这两个数组的值，就能逆向算出正确的 33 位输入字符串</p>
+<p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260306153447246.png" alt="image-20260306153447176"></p>
+<p>得到<code>dword_40F040</code>和<code>byte_40F0E0</code>这两个数组的值后便可以编写脚本</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">dword = [9,10,15,23,7,24,12,6,1,16,3,17,32,29,11,30,27,22,4,13,19,20,21,2,25,5,31,8,18,26,28,14,0]</span><br><span class="line">byte = [0x67,0x79,0x7B,0x7F,0x75,0x2B,0x3C,0x52,0x53,0x79,0x57,0x5E,0x5D,0x42,0x7B,0x2D,0x2A,0x66,0x42,0x7E,0x4C,0x57,0x79,0x41,0x6B,0x7E,0x65,0x3C,0x5C,0x45,0x6F,0x62,0x4D]</span><br><span class="line"></span><br><span class="line">v6 = [0]*33</span><br><span class="line">for i in range(33):</span><br><span class="line">    v6[dword[i]] = byte[i] ^ dword[i]</span><br><span class="line">flag = f&quot;flag&#123;&#123;&#123;&#x27;&#x27;.join(chr(c) for c in v6)&#125;&#125;&#125;&quot;</span><br><span class="line"></span><br><span class="line">print(&quot;最终答案：&quot;, flag)</span><br></pre></td></tr></table></figure>
 
-<p>得到第一段密码<strong>123321</strong>，可以输入程序运行一下，发现是对的<br><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260305150504400.png" alt="image-20260305150504346"><br>接着看第二段密码</p>
-<p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260305145620958.png" alt="image-20260305145620886"></p>
-<p>第二个密码也是六个字符，但未告知字符串组成类型，这里我们分析分析sub_401019()</p>
-<p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260305150734126.png" alt="image-20260305150734044"></p>
-<p>这里我依然扔给AI分析的，发现<strong>第二个密码就是通过md5加密</strong>，因为没有告知字符串组成并且数据庞大，因此用脚本爆破并不现实<br>所以我这里用的是在线工具<a target="_blank" rel="noopener" href="https://www.bejson.com/enc/md5dsc/">MD5解密-BeJSON.com</a></p>
-<p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260305151006206.png" alt="image-20260305151006119"></p>
-<p>由于只需要前六位，所以第二段的密码也就是<strong>~!3a@0</strong></p>
-<p>第二段密码输入程序后发现给了个rtf文件</p>
-<p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260305151153951.png" alt="image-20260305151153875"></p>
-<p>我们打开rtf文件即得到了本题的flag</p>
-<p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260305151237240.png" alt="image-20260305151237179"></p>
+<p>运行代码即可得到结果，由于得到的 flag 请包上 flag{} 提交</p>
+<p>所以最后结果为<strong>flag{Tr4nsp0sltiON_Clph3r_1s_3z}}</strong></p>
 
         </div>
 
@@ -268,7 +266,7 @@
                 
                     <p class="copyright-item">
                         <span>Permalink:</span>
-                        <span><a href="http://example.com/2026/03/05/CrackRTF/">http://example.com/2026/03/05/CrackRTF/</a></span>
+                        <span><a href="http://example.com/2026/03/06/%5BMRCTF2020%5DTransform/">http://example.com/2026/03/06/%5BMRCTF2020%5DTransform/</a></span>
                     </p>
                 
                 
@@ -305,10 +303,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2026/03/06/%5BMRCTF2020%5DTransform/">BUUCTF  [MRCTF2020]Transform</a>
             
-            
-            <a class="next" rel="next" href="/2026/03/04/%5BWUSTCTF2020%5Dlevel2/">BUUCTF  [WUSTCTF2020]level2</a>
+            <a class="next" rel="next" href="/2026/03/05/CrackRTF/">BUUCTF  CrackRTF</a>
             
         </section>
 

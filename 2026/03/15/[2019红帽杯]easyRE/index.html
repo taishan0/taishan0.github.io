@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="TAISHAN">
+
+
+
+
+
+<title>BUUCTFre    [2019红帽杯]easyRE | Taishan&#39;s blog</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const pagebody = document.getElementsByTagName('body')[0]
+
+            function setTheme(status) {
+
+                if (status === 'dark') {
+                    window.sessionStorage.theme = 'dark'
+                    pagebody.classList.add('dark-theme');
+
+                } else if (status === 'light') {
+                    window.sessionStorage.theme = 'light'
+                    pagebody.classList.remove('dark-theme');
+                }
+            };
+
+            setTheme(window.sessionStorage.theme)
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">TS&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                <a class="menu-item" href="/archives">Posts</a>
+                
+                <a class="menu-item" href="/categories">Categories</a>
+                
+                <a class="menu-item" href="/tags">Tags</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">TS&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">
+                    <svg class="menu-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M4.5 17.27q-.213 0-.356-.145T4 16.768t.144-.356t.356-.143h15q.213 0 .356.144q.144.144.144.357t-.144.356t-.356.143zm0-4.77q-.213 0-.356-.144T4 11.999t.144-.356t.356-.143h15q.213 0 .356.144t.144.357t-.144.356t-.356.143zm0-4.77q-.213 0-.356-.143Q4 7.443 4 7.23t.144-.356t.356-.143h15q.213 0 .356.144T20 7.23t-.144.356t-.356.144z"/></svg>
+                    <svg class="close-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Material Symbols Light by Google - https://github.com/google/material-design-icons/blob/master/LICENSE --><path fill="currentColor" d="m12 12.708l-5.246 5.246q-.14.14-.344.15t-.364-.15t-.16-.354t.16-.354L11.292 12L6.046 6.754q-.14-.14-.15-.344t.15-.364t.354-.16t.354.16L12 11.292l5.246-5.246q.14-.14.345-.15q.203-.01.363.15t.16.354t-.16.354L12.708 12l5.246 5.246q.14.14.15.345q.01.203-.15.363t-.354.16t-.354-.16z"/></svg>
+                </div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                <a class="menu-item" href="/archives">Posts</a>
+                
+                <a class="menu-item" href="/categories">Categories</a>
+                
+                <a class="menu-item" href="/tags">Tags</a>
+                
+                <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if (toggleMenu.classList.contains("active")) {
+            toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        } else {
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">BUUCTFre    [2019红帽杯]easyRE</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">TAISHAN</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">March 15, 2026&nbsp;&nbsp;14:03:21</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E9%80%86%E5%90%91%E5%AD%A6%E4%B9%A0/">逆向学习</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h2 id="2019红帽杯-easyRE"><a href="#2019红帽杯-easyRE" class="headerlink" title="[2019红帽杯]easyRE"></a>[2019红帽杯]easyRE</h2><p>感谢 purecall 师傅提供题目~得到的 flag 请包上 flag{} 提交。</p>
+<p>下载后发现是个elf文件，先查壳</p>
+<p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260315123021059.png" alt="image-20260315123020989"></p>
+<p>发现无壳后扔进IDA中分析</p>
+<p>先按f12查看字符串，找到You found me！！</p>
+<p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260315141212387.png" alt="image-20260315141212273"><br>发现了一堆字符串</p>
+<p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260315141503949.png" alt="image-20260315141503860"></p>
+<p>双击sub_4009c6进入字符串</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br></pre></td><td class="code"><pre><span class="line">signed __int64 sub_4009C6()</span><br><span class="line">&#123;</span><br><span class="line">  signed __int64 result; // rax</span><br><span class="line">  __int64 v1; // ST10_8</span><br><span class="line">  __int64 v2; // ST18_8</span><br><span class="line">  __int64 v3; // ST20_8</span><br><span class="line">  __int64 v4; // ST28_8</span><br><span class="line">  __int64 v5; // ST30_8</span><br><span class="line">  __int64 v6; // ST38_8</span><br><span class="line">  __int64 v7; // ST40_8</span><br><span class="line">  __int64 v8; // ST48_8</span><br><span class="line">  __int64 v9; // ST50_8</span><br><span class="line">  __int64 v10; // ST58_8</span><br><span class="line">  int i; // [rsp+Ch] [rbp-114h]</span><br><span class="line">  char v12; // [rsp+60h] [rbp-C0h]</span><br><span class="line">  char v13; // [rsp+61h] [rbp-BFh]</span><br><span class="line">  char v14; // [rsp+62h] [rbp-BEh]</span><br><span class="line">  char v15; // [rsp+63h] [rbp-BDh]</span><br><span class="line">  char v16; // [rsp+64h] [rbp-BCh]</span><br><span class="line">  char v17; // [rsp+65h] [rbp-BBh]</span><br><span class="line">  char v18; // [rsp+66h] [rbp-BAh]</span><br><span class="line">  char v19; // [rsp+67h] [rbp-B9h]</span><br><span class="line">  char v20; // [rsp+68h] [rbp-B8h]</span><br><span class="line">  char v21; // [rsp+69h] [rbp-B7h]</span><br><span class="line">  char v22; // [rsp+6Ah] [rbp-B6h]</span><br><span class="line">  char v23; // [rsp+6Bh] [rbp-B5h]</span><br><span class="line">  char v24; // [rsp+6Ch] [rbp-B4h]</span><br><span class="line">  char v25; // [rsp+6Dh] [rbp-B3h]</span><br><span class="line">  char v26; // [rsp+6Eh] [rbp-B2h]</span><br><span class="line">  char v27; // [rsp+6Fh] [rbp-B1h]</span><br><span class="line">  char v28; // [rsp+70h] [rbp-B0h]</span><br><span class="line">  char v29; // [rsp+71h] [rbp-AFh]</span><br><span class="line">  char v30; // [rsp+72h] [rbp-AEh]</span><br><span class="line">  char v31; // [rsp+73h] [rbp-ADh]</span><br><span class="line">  char v32; // [rsp+74h] [rbp-ACh]</span><br><span class="line">  char v33; // [rsp+75h] [rbp-ABh]</span><br><span class="line">  char v34; // [rsp+76h] [rbp-AAh]</span><br><span class="line">  char v35; // [rsp+77h] [rbp-A9h]</span><br><span class="line">  char v36; // [rsp+78h] [rbp-A8h]</span><br><span class="line">  char v37; // [rsp+79h] [rbp-A7h]</span><br><span class="line">  char v38; // [rsp+7Ah] [rbp-A6h]</span><br><span class="line">  char v39; // [rsp+7Bh] [rbp-A5h]</span><br><span class="line">  char v40; // [rsp+7Ch] [rbp-A4h]</span><br><span class="line">  char v41; // [rsp+7Dh] [rbp-A3h]</span><br><span class="line">  char v42; // [rsp+7Eh] [rbp-A2h]</span><br><span class="line">  char v43; // [rsp+7Fh] [rbp-A1h]</span><br><span class="line">  char v44; // [rsp+80h] [rbp-A0h]</span><br><span class="line">  char v45; // [rsp+81h] [rbp-9Fh]</span><br><span class="line">  char v46; // [rsp+82h] [rbp-9Eh]</span><br><span class="line">  char v47; // [rsp+83h] [rbp-9Dh]</span><br><span class="line">  char v48[32]; // [rsp+90h] [rbp-90h]</span><br><span class="line">  int v49; // [rsp+B0h] [rbp-70h]</span><br><span class="line">  char v50; // [rsp+B4h] [rbp-6Ch]</span><br><span class="line">  char v51; // [rsp+C0h] [rbp-60h]</span><br><span class="line">  char v52; // [rsp+E7h] [rbp-39h]</span><br><span class="line">  char v53; // [rsp+100h] [rbp-20h]</span><br><span class="line">  unsigned __int64 v54; // [rsp+108h] [rbp-18h]</span><br><span class="line"></span><br><span class="line">  v54 = __readfsqword(0x28u);</span><br><span class="line">  v12 = 73;</span><br><span class="line">  v13 = 111;</span><br><span class="line">  v14 = 100;</span><br><span class="line">  v15 = 108;</span><br><span class="line">  v16 = 62;</span><br><span class="line">  v17 = 81;</span><br><span class="line">  v18 = 110;</span><br><span class="line">  v19 = 98;</span><br><span class="line">  v20 = 40;</span><br><span class="line">  v21 = 111;</span><br><span class="line">  v22 = 99;</span><br><span class="line">  v23 = 121;</span><br><span class="line">  v24 = 127;</span><br><span class="line">  v25 = 121;</span><br><span class="line">  v26 = 46;</span><br><span class="line">  v27 = 105;</span><br><span class="line">  v28 = 127;</span><br><span class="line">  v29 = 100;</span><br><span class="line">  v30 = 96;</span><br><span class="line">  v31 = 51;</span><br><span class="line">  v32 = 119;</span><br><span class="line">  v33 = 125;</span><br><span class="line">  v34 = 119;</span><br><span class="line">  v35 = 101;</span><br><span class="line">  v36 = 107;</span><br><span class="line">  v37 = 57;</span><br><span class="line">  v38 = 123;</span><br><span class="line">  v39 = 105;</span><br><span class="line">  v40 = 121;</span><br><span class="line">  v41 = 61;</span><br><span class="line">  v42 = 126;</span><br><span class="line">  v43 = 121;</span><br><span class="line">  v44 = 76;</span><br><span class="line">  v45 = 64;</span><br><span class="line">  v46 = 69;</span><br><span class="line">  v47 = 67;</span><br><span class="line">  memset(v48, 0, sizeof(v48));</span><br><span class="line">  v49 = 0;</span><br><span class="line">  v50 = 0;</span><br><span class="line">  sub_4406E0(0LL, v48, 37LL);</span><br><span class="line">  v50 = 0;</span><br><span class="line">  if ( sub_424BA0(v48) == 36 )</span><br><span class="line">  &#123;</span><br><span class="line">    for ( i = 0; i &lt; (unsigned __int64)sub_424BA0(v48); ++i )</span><br><span class="line">    &#123;</span><br><span class="line">      if ( (unsigned __int8)(v48[i] ^ i) != *(&amp;v12 + i) )</span><br><span class="line">      &#123;</span><br><span class="line">        result = 4294967294LL;</span><br><span class="line">        goto LABEL_13;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    sub_410CC0(&quot;continue!&quot;);</span><br><span class="line">    memset(&amp;v51, 0, 0x40uLL);</span><br><span class="line">    v53 = 0;</span><br><span class="line">    sub_4406E0(0LL, &amp;v51, 64LL);</span><br><span class="line">    v52 = 0;</span><br><span class="line">    if ( sub_424BA0(&amp;v51) == 39 )</span><br><span class="line">    &#123;</span><br><span class="line">      v1 = sub_400E44(&amp;v51);</span><br><span class="line">      v2 = sub_400E44(v1);</span><br><span class="line">      v3 = sub_400E44(v2);</span><br><span class="line">      v4 = sub_400E44(v3);</span><br><span class="line">      v5 = sub_400E44(v4);</span><br><span class="line">      v6 = sub_400E44(v5);</span><br><span class="line">      v7 = sub_400E44(v6);</span><br><span class="line">      v8 = sub_400E44(v7);</span><br><span class="line">      v9 = sub_400E44(v8);</span><br><span class="line">      v10 = sub_400E44(v9);</span><br><span class="line">      if ( !(unsigned int)sub_400360(v10, off_6CC090) )</span><br><span class="line">      &#123;</span><br><span class="line">        sub_410CC0(&quot;You found me!!!&quot;);</span><br><span class="line">        sub_410CC0(&quot;bye bye~&quot;);</span><br><span class="line">      &#125;</span><br><span class="line">      result = 0LL;</span><br><span class="line">    &#125;</span><br><span class="line">    else</span><br><span class="line">    &#123;</span><br><span class="line">      result = 4294967293LL;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  else</span><br><span class="line">  &#123;</span><br><span class="line">    result = 0xFFFFFFFFLL;</span><br><span class="line">  &#125;</span><br><span class="line">LABEL_13:</span><br><span class="line">  if ( __readfsqword(0x28u) != v54 )</span><br><span class="line">    sub_444020();</span><br><span class="line">  return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们这里可以直接编写一个脚本，将加密的数据异或</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">segments = [</span><br><span class="line">    &quot;Iodl&gt;Qnb(ocy&quot;, 127,</span><br><span class="line">    &quot;y.i&quot;, 127,</span><br><span class="line">    &quot;d`3w&#125;wek9&#123;iy=~yL@EC&quot;</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">v12 = []</span><br><span class="line">for seg in segments:</span><br><span class="line">    if isinstance(seg, str):</span><br><span class="line">        v12.extend(ord(c) for c in seg) </span><br><span class="line">    else:</span><br><span class="line">        v12.append(seg)  </span><br><span class="line"></span><br><span class="line">v15 = &#x27;&#x27;.join(chr(v12[i] ^ i) for i in range(len(v12)))</span><br><span class="line"></span><br><span class="line">print(&quot;v12的ASCII列表：&quot;, v12)</span><br><span class="line">print(&quot;异或后的字符串：&quot;, v15)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260315143047919.png" alt="image-20260315143047865"></p>
+<p>结果是提供提示信息：前四个字符是<code>flag</code></p>
+<p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260315143137998.png" alt="image-20260315143137934"></p>
+<p>接着我们看这一段函数这里用了10次相同的函数，函数作用是base64加密，最后判断<code>v11</code>与<code>off_6cc090</code>是否相等，双击<code>off_6cc090</code>查看其内容</p>
+<p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260315143453786.png" alt="image-20260315143453713"></p>
+<p>这里我们发现，字符串就是这个，我们进行10次base64加密即可</p>
+<p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260315143753056.png" alt="image-20260315143752963"></p>
+<p>然后我们得到一个网站<a target="_blank" rel="noopener" href="https://bbs.pediy.com/thread-254172.htm">https://bbs.pediy.com/thread-254172.htm</a><br>打开网站也没有什么有用的信息，说明我们找的不对<br><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260315144724297.png" alt="image-20260315144724226"></p>
+<p>然后我们找到sub_400D35</p>
+<p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260315144303035.png" alt="image-20260315144302917"></p>
+<p>分析可以直接写脚本</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">byte_6cc0a0 = [0x40,0x35,0x20,0x56,0x5d,0x18,0x22,0x45,0x17,0x2f,0x24,0x6e,0x62,0x3c,0x27,0x54,0x48,0x6c,0x24,0x6e,0x72,0x3c,0x32,0x45,0x5b]</span><br><span class="line">tmp = [102,108,97,103]</span><br><span class="line"></span><br><span class="line">v1 = [tmp[i] ^ byte_6cc0a0[i] for i in range(4)]</span><br><span class="line"></span><br><span class="line">flag = &#x27;&#x27;.join(chr(byte_6cc0a0[i] ^ v1[i%4]) for i in range(25))</span><br><span class="line"></span><br><span class="line">print(&quot;v1:&quot;, v1)</span><br><span class="line">print(&quot;flag:&quot;, flag)</span><br></pre></td></tr></table></figure>
+
+<p>运行即可得到最终flag</p>
+<p><img src="https://taishan0.oss-cn-hangzhou.aliyuncs.com/typora/20260315144915383.png" alt="image-20260315144915322"></p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>TAISHAN</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2026/03/15/%5B2019%E7%BA%A2%E5%B8%BD%E6%9D%AF%5DeasyRE/">http://example.com/2026/03/15/%5B2019%E7%BA%A2%E5%B8%BD%E6%9D%AF%5DeasyRE/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/RE/"># RE</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2026/03/06/%5BMRCTF2020%5DTransform/">BUUCTF  [MRCTF2020]Transform</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© TAISHAN | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
